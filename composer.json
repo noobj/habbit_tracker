@@ -11,7 +11,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "ajt/guzzle-toggl": "dev-master"
+        "noobj/guzzle-toggl": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -56,11 +56,5 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type":"vcs",
-            "url":"./guzzle-toggl"
-        }
-    ]
+    "prefer-stable": true
 }
