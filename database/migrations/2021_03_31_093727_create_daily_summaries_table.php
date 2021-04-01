@@ -17,11 +17,12 @@ class CreateDailySummariesTable extends Migration
             $table->id();
             $table->string('date');
             $table->unsignedBigInteger('project_id')->unsigned();
+            $table->integer('duration')->unsigned()->default(0);
+
             $table->foreign('project_id')
                 ->references('id')->on('projects')
                 ->onDelete('cascade');
-            $table->integer('duration')->unsigned()->default(0);
-
+            $table->unique(['date', 'project_id']);
         });
     }
 

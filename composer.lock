@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0806f67e7725be42716606872fdcf71e",
+    "content-hash": "c0323462d725ef787e4af7732cc64e86",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1081,6 +1081,143 @@
                 }
             ],
             "time": "2020-07-21T13:45:09+00:00"
+        },
+        {
+            "name": "illuminated/console-logger",
+            "version": "8.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dmitry-ivanov/laravel-console-logger.git",
+                "reference": "7dacb1c6f887d984de2c204a788fd1b1aca20d37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dmitry-ivanov/laravel-console-logger/zipball/7dacb1c6f887d984de2c204a788fd1b1aca20d37",
+                "reference": "7dacb1c6f887d984de2c204a788fd1b1aca20d37",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/console": "^8.0",
+                "illuminate/support": "^8.0",
+                "illuminated/helper-functions": "^8.0",
+                "monolog/monolog": "^2.0",
+                "php": "^7.3|^8.0",
+                "psr/http-message": "^1.0",
+                "psr/log": "^1.0",
+                "symfony/finder": "^5.1"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
+                "illuminated/testing-tools": "^8.0",
+                "mockery/mockery": "^1.3.1",
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^8.4|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "integrations/autoload.php"
+                ],
+                "psr-4": {
+                    "Illuminated\\Console\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Ivanov",
+                    "email": "dmitry.g.ivanov@gmail.com"
+                }
+            ],
+            "description": "Logging and Notifications for Laravel Console Commands.",
+            "keywords": [
+                "command",
+                "console",
+                "email-notifications",
+                "error-handling",
+                "guzzle-middleware",
+                "laravel",
+                "logger",
+                "notifications"
+            ],
+            "support": {
+                "issues": "https://github.com/dmitry-ivanov/laravel-console-logger/issues",
+                "source": "https://github.com/dmitry-ivanov/laravel-console-logger"
+            },
+            "time": "2020-12-21T17:19:55+00:00"
+        },
+        {
+            "name": "illuminated/helper-functions",
+            "version": "8.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dmitry-ivanov/laravel-helper-functions.git",
+                "reference": "b8d244608792f766245da3b986d28462e99d434b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dmitry-ivanov/laravel-helper-functions/zipball/b8d244608792f766245da3b986d28462e99d434b",
+                "reference": "b8d244608792f766245da3b986d28462e99d434b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "illuminate/support": "^8.0",
+                "nesbot/carbon": "^2.17",
+                "php": "^7.3|^8.0",
+                "spatie/array-to-xml": "^2.7",
+                "symfony/filesystem": "^5.1",
+                "symfony/finder": "^5.1",
+                "symfony/process": "^5.1",
+                "symfony/var-dumper": "^5.1"
+            },
+            "require-dev": {
+                "illuminated/testing-tools": "^8.0",
+                "mockery/mockery": "^1.3.1",
+                "phpunit/phpunit": "^8.4|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/autoload.php"
+                ],
+                "psr-4": {
+                    "Illuminated\\Helpers\\": "src/Helpers/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Ivanov",
+                    "email": "dmitry.g.ivanov@gmail.com"
+                }
+            ],
+            "description": "Laravel-specific and pure PHP Helper Functions.",
+            "keywords": [
+                "Backtrace",
+                "array-to-xml",
+                "background-command",
+                "functions",
+                "helpers",
+                "laravel",
+                "multiarray",
+                "xml-parser",
+                "xml-to-array"
+            ],
+            "support": {
+                "issues": "https://github.com/dmitry-ivanov/laravel-helper-functions/issues",
+                "source": "https://github.com/dmitry-ivanov/laravel-helper-functions"
+            },
+            "time": "2020-12-21T16:49:57+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2596,6 +2733,70 @@
                 }
             ],
             "time": "2020-08-18T17:17:46+00:00"
+        },
+        {
+            "name": "spatie/array-to-xml",
+            "version": "2.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/array-to-xml.git",
+                "reference": "db39308c5236b69b89cadc3f44f191704814eae2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/db39308c5236b69b89cadc3f44f191704814eae2",
+                "reference": "db39308c5236b69b89cadc3f44f191704814eae2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "^9.0",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ArrayToXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://freek.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert an array to xml",
+            "homepage": "https://github.com/spatie/array-to-xml",
+            "keywords": [
+                "array",
+                "convert",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/array-to-xml/issues",
+                "source": "https://github.com/spatie/array-to-xml/tree/2.16.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-11-18T22:03:17+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

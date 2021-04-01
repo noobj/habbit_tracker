@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class DailySummaries extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'date',
+        'project_id',
+        'duration'
+    ];
+
+    public function project()
+    {
+        return $this->belongsTo('App\Models\Projects','project_id');
+    }
 }
