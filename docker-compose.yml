@@ -1,12 +1,25 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
+    mysql:
+        ports:
+            - "3306:3306"
+        image: mysql:8.0.23
+        volumes:
+            - "./default.conf:/etc/nginx/conf.d/default.conf"
+            - "/home/jjj/mysqlData:/var/lib/mysql"
+        networks:
+            - backend
+        environment:
+            - TZ=Asia/Taipei
+            - MYSQL_ROOT_PASSWORD=1234
     laravel.test:
         build:
-            context: ./vendor/laravel/sail/runtimes/8.0
+            context: ./resources/docker/
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
+                XDEBUG: ${APP_DEBUG}
         image: sail-8.0/app
         ports:
             - '${APP_PORT:-80}:80'
@@ -17,6 +30,8 @@ services:
             - '.:/var/www/html'
         networks:
             - backend
+        depends_on:
+            - "mysql"
 networks:
     backend:
         driver: bridge
