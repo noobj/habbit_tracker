@@ -49,7 +49,9 @@ RUN if [ ${XDEBUG} ] ; then \
     && echo "zend_extension="$(find /usr/lib/php/20200930/ -name xdebug.so)" > /etc/php/8.0/cli/php.ini" \
     && echo "xdebug.mode = debug" >> /etc/php/8.0/cli/php.ini \
     && echo "xdebug.start_with_request = yes" >> /etc/php/8.0/cli/php.ini \
-    && echo "xdebug.discover_client_host = true" >> /etc/php/8.0/cli/php.ini ;\
+    && echo "xdebug.idekey = PHPSTORM" >> /etc/php/8.0/cli/php.ini \
+    && echo "xdebug.client_host = 192.168.111.42" >> /etc/php/8.0/cli/php.ini \
+    && echo "xdebug.client_port = 9003" >> /etc/php/8.0/cli/php.ini ;\
 fi;
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
