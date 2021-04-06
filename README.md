@@ -5,11 +5,11 @@
 * [Installing](#installing)
 * [License](#license)
 
-##System requirements
+## System requirements
 * PHP 7.4+
 * Docker Compose
 
-##Installing
+## Installing
 * docker-compose up --build -d
 * Create new mysql user and database
 * cp .env.example .env
