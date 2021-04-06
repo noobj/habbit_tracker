@@ -13,8 +13,8 @@
 * docker-compose up --build -d
 * Create new mysql user and database
 * cp .env.example .env
-* php artisan make:seeder ProjectTableSeeder
-* php artisan schedule:FetchAndUpdateToggl 10
+* vendor/bin/sail php artisan make:seeder ProjectTableSeeder
+* vendor/bin/sail php artisan schedule:FetchAndUpdateToggl 10
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -24,7 +24,7 @@
 <img src="https://i.pinimg.com/originals/ca/c1/56/cac1563b454d07db266240fc45854ed1.jpg">
 
 
-* Fetch the record from Toggl and insert into MongoDB.
+* Fetch the record from Toggl and insert into DB.
 * A github-like activity board to diplay daily summary.  
 
 
