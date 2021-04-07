@@ -2,26 +2,30 @@
 ![GitHub](https://img.shields.io/github/license/noobj/habit_tracker?color=blue)
 
 * [System requirements](#system-requirements)
-* [Installing](#installing)
+* [Installing for dev](#installing-for-dev)
 * [License](#license)
 
 ## System requirements
 * PHP 7.4+
 * Docker Compose
 
-## Installing
+## Installing for dev
 * docker-compose up --build -d
 * Create new mysql user and database
 * cp .env.example .env
-* vendor/bin/sail php artisan make:seeder ProjectTableSeeder
-* vendor/bin/sail php artisan schedule:FetchAndUpdateToggl 10
+* vendor/bin/sail php artisan db:seed ProjectTableSeeder
+* vendor/bin/sail php artisan schedule:FetchAndUpdateToggl 30
+* vendor/bin/sail php artisan db:seed DatabaseSeeder
+* Get your random generated user email from database, password would be `password`
+* Get user_token via GET http://127.0.0.1:9000/api/create_token with Basic Auth your email and password
+* Use token for fetching Daily Summary GET http://192.168.56.101:9000/api/summary?start_date=2021-01-01&end_date=2021-04-19
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 > If you want to stick with a habit for good, one simple and effective thing you can do is keep a habit tracker. (James Clear, "Atomic Habits") 
 
-<img src="https://i.pinimg.com/originals/ca/c1/56/cac1563b454d07db266240fc45854ed1.jpg">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbrH0LSIMcdftnQJVqPvQMDbuQGcqHmO-FeA&usqp=CAU">
 
 
 * Fetch the record from Toggl and insert into DB.
