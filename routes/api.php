@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth.basic')->get('/create_token', function (Request $request) {
+    $token = $request->user()->createToken('default_token');
+
+    $user = $request->user();
+    $user->token =  $token->plainTextToken;
+
+    return $user;
+});
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
