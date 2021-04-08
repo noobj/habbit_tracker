@@ -10,15 +10,17 @@
 * Docker Compose
 
 ## Installing for dev
-* docker-compose up --build -d
-* Create new mysql user and database
 * cp .env.example .env
+* docker-compose up --build -d
+* docker exec habit_tracker_laravel.test_1 composer install
+* Create new mysql user and database
+* vendor/bin/sail php artisan migrate
 * vendor/bin/sail php artisan db:seed ProjectTableSeeder
-* vendor/bin/sail php artisan schedule:FetchAndUpdateToggl 30
+* vendor/bin/sail php artisan schedule:FetchAndUpdateThirdParty 10
 * vendor/bin/sail php artisan db:seed DatabaseSeeder
 * Get your random generated user email from database, password would be `password`
-* Get user_token via GET http://127.0.0.1:9000/api/create_token with Basic Auth your email and password
-* Use token for fetching Daily Summary GET http://192.168.56.101:9000/api/summary?start_date=2021-01-01&end_date=2021-04-19
+* Get user_token via GET http://127.0.0.1/api/create_token with Basic Auth your email and password
+* Use token for fetching Daily Summary GET http://127.0.0.1/api/summary?start_date=2021-01-01&end_date=2021-04-19
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
