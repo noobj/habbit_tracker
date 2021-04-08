@@ -10,12 +10,23 @@ class SummaryController extends Controller
 {
     protected $summaryService;
 
+    /**
+     * @param SummaryService $summaryService
+     */
     public function __construct(SummaryService $summaryService)
     {
         $this->summaryService = $summaryService;
     }
 
-    public function getProjectSummary(Request $request, string $project = 'Productive') {
+    /**
+     * Get specific project daily summary by given date range
+     *
+     * @param Request $request
+     * @param string $project
+     * @return void
+     */
+    public function getProjectSummary(Request $request, string $project = 'Productive')
+    {
         $validator = Validator::make($request->all(), [
             'start_date' => 'required|date',
             'end_date' => 'required|date'
@@ -27,8 +38,6 @@ class SummaryController extends Controller
 
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-
-        var_dump($this->summaryService->getProjectIdByName($project));
 
         return $this->summaryService->getRangeSummary($project, $startDate, $endDate);
     }
