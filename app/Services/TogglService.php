@@ -9,8 +9,9 @@ use Carbon\Carbon;
 use Exception;
 use Noobj\Toggl\ReportsClient;
 use Noobj\Toggl\TogglClient;
+use App\Contracts\ThirdPartyFetchingService;
 
-class TogglService
+class TogglService implements ThirdPartyFetchingService
 {
     /**
      * Fetch the Toggl daily summary
@@ -19,7 +20,7 @@ class TogglService
      * @return mixed
      * @throws Exception
      */
-    public function fetchDailySummaryFromToggl(string $date) : array
+    public function fetchDailySummaryFromThirdParty(string $date) : array
     {
         $toggl_token = env('TOGGL_TOKEN');
 

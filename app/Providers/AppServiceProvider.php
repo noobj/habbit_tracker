@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\ThirdPartyFetchingService;
+use App\Services\TogglService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // $config = $this->app->make('config')->get('service.time_record');
+        $this->app->singleton(ThirdPartyFetchingService::class, TogglService::class);
     }
 
     /**

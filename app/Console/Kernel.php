@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('schedule:FetchAndUpdateToggl 3')
+        $schedule->command('schedule:FetchAndUpdateThirdParty 3')
                  ->daily();
     }
 
