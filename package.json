@@ -14,6 +14,7 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "axios": "^0.21",
+    "date-fns": "^2.20.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "mix-tailwindcss": "^1.3.0",
