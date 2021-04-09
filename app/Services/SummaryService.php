@@ -98,6 +98,7 @@ class SummaryService
             $entry['duration'] = $this->convertToHoursMins($durationInMinute);
 
             $entry['date'] = Carbon::createFromDate($entry['date'])->toFormattedDateString();
+            $entry['timestamp'] = intval(Carbon::createFromDate($entry['date'])->getPreciseTimestamp(3));
 
             return $entry;
         }, $rawData);
