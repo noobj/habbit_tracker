@@ -6,10 +6,21 @@ namespace App\Services;
 
 use App\Models\DailySummaries;
 use App\Models\Projects;
+use Carbon\Carbon;
 use Exception;
 
 class SummaryService
 {
+    /**
+     * Used for mapping the minute range to color level for frontend displaying
+     * Rules as:
+     *  0~30m => 1
+     *  30m ~ 1h => 2
+     *  1h ~ 2h => 3
+     *  2h ~ => 4
+     *
+     * @var array
+     */
     private $durationLevelMap = [
         0 => 1,
         1 => 2,
@@ -50,6 +61,12 @@ class SummaryService
             ->get()->toArray();
     }
 
+    /**
+     * Convert minute to hours:minutes format
+     *
+     * @param integer $minuteRaw
+     * @return string
+     */
     private function convertToHoursMins(int $minuteRaw): string
     {
         if ($minuteRaw < 1) {
@@ -61,18 +78,27 @@ class SummaryService
 
         if ($hours == 0) return sprintf('%dm', $minutes);
 
-        return sprintf('%dh:%dm', $hours, $minutes);
+        return sprintf('%dh%dm', $hours, $minutes);
     }
 
+    /**
+     * Process the raw data format fetch from database
+     *
+     * @param array $rawData
+     * @return array
+     */
     public function processTheRawSummaries(array $rawData): array
     {
         $result = array_map(function($entry) {
             $durationInMinute = $entry['duration'] / 1000 / 60;
-            $levelIndex = $durationInMinute / 30;
 
+            $levelIndex = $durationInMinute / 30;
             $level = $levelIndex > 5 ? 4 : $this->durationLevelMap[$levelIndex];
             $entry['level'] = $level;
             $entry['duration'] = $this->convertToHoursMins($durationInMinute);
+
+            $entry['date'] = Carbon::createFromDate($entry['date'])->toFormattedDateString();
+
             return $entry;
         }, $rawData);
 
