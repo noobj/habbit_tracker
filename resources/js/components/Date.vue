@@ -12,13 +12,13 @@
   >
     <span
       v-if="showMonth"
-      class="-mt-5 text-xs select-none"
+      class="-mt-5 text-xs select-none lg:-mt-6 lg:text-sm"
     >
       {{ date | format('LLL') }}
     </span>
     <span
       v-if="showWeekday"
-      class="-ml-8 text-xs select-none"
+      class="flex items-center -ml-8 text-xs select-none lg:-ml-10 lg:text-sm"
     >
       {{ date | format('iii') }}
     </span>
