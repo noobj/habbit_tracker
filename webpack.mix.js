@@ -3,6 +3,7 @@ require('mix-tailwindcss')
 
 mix.js('resources/js/app.js', 'js')
   .vue()
+  .postCss('resources/css/app.css', 'public/css')
   .tailwind()
   .options({
     terser: {
