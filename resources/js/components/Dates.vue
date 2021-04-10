@@ -6,7 +6,7 @@
         :key="date.getTime()"
         :date="date"
         :summary="findDuration(date)"
-        :showMonth="(index === 0 || index % (7 * 4) === 0) && index < (365 - 7)"
+        :showMonth="showMonth(date)"
         :showWeekday="index < 7 && index % 2 === 1"
       />
     </div>
@@ -36,6 +36,9 @@ export default {
           level: 0,
           duration: '0h'
         }
+    },
+    showMonth (date) {
+      return date.getDate() <=7 && date.getDay() === 0
     }
   },
   async mounted () {
