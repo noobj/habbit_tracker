@@ -7,23 +7,28 @@ import {
   format
 } from 'date-fns'
 
-const end = startOfToday()
-let start = subYears(end, 1)
-start = subDays(start, 7)
+const endDate = startOfToday()
+let startDate = subYears(endDate, 1)
+startDate = subDays(startDate, 7)
 
 const getDates = () => {
-  let array = eachDayOfInterval({
-      start: start,
-      end: end
+  let dates = eachDayOfInterval({
+      start: startDate,
+      end: endDate
     })
     .sort((d1, d2) => d1 < d2 ? -1 : d1 > d2 ? 1 : 0)
-  return array.slice(array.indexOf(array.find(d => isSunday(d))))
+  
+  dates = dates.slice(dates.indexOf(dates.find(d => isSunday(d))))
+  if (dates.length / 7 > 53) {
+    dates = dates.slice(7)
+  }
+  return dates
 }
 
 const getSummaries = async () => {
   let params = new URLSearchParams
-  params.set('start_date', format(start, 'yyyy-MM-dd'))
-  params.set('end_date', format(end, 'yyyy-MM-dd'))
+  params.set('start_date', format(startDate, 'yyyy-MM-dd'))
+  params.set('end_date', format(endDate, 'yyyy-MM-dd'))
   return await fetch(`/api/summary?${params.toString()}`, {
       method: 'GET',
       headers: {
