@@ -7,6 +7,7 @@
 
 ## System requirements
 * PHP 7.4+
+* Nodejs 12.0+
 * Docker Compose
 
 ## Installing for dev
@@ -39,6 +40,8 @@
 ### Built With
 
 * [Laravel 8](https://laravel.com/docs/8.x/releases)
+* [VueJS 2](https://vuejs.org/)
+* [Tailwind CSS](https://tailwindcss.com/)
 
 
 <!-- LICENSE -->
