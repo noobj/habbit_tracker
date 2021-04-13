@@ -17,7 +17,8 @@ class ThirdPartyFetchingServiceProvider extends ServiceProvider implements Defer
     public function register()
     {
         $this->app->singleton(ThirdPartyFetchingService::class, function ($app) {
-            $serviceName = 'App\\Services\\' . ucfirst(strtolower($app->make('config')->get('services.time_record'))) . 'Service';
+            $config = $app->make('config')->all();
+            $serviceName = 'App\\Services\\' . ucfirst(strtolower($config->services->time_record)) . 'Service';
             return new $serviceName();
         });
     }

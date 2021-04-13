@@ -10,6 +10,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "illuminated/console-logger": "^8.2",
+        "laminas/laminas-config": "^3.5",
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.9",
         "laravel/tinker": "^2.5",
