@@ -4,5 +4,8 @@ module.exports = {
     './resources/**/*.js',
     './resources/**/*.vue',
   ],
-  darkMode: false
+  darkMode: false,
+  plugins: [
+    require('@tailwindcss/aspect-ratio')
+  ]
 }
