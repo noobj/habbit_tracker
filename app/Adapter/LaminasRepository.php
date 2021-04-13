@@ -12,14 +12,14 @@ class LaminasRepository implements ArrayAccess, ConfigContract
     /**
      * All of the configuration items.
      *
-     * @var array
+     * @var Config
      */
     protected $items = [];
 
     /**
      * Create a new configuration repository.
      *
-     * @param  array  $items
+     * @param  Config  $configs
      * @return void
      */
     public function __construct(Config $configs)
@@ -99,8 +99,48 @@ class LaminasRepository implements ArrayAccess, ConfigContract
         $keys = is_array($key) ? $key : [$key => $value];
 
         foreach ($keys as $key => $value) {
-            Arr::set($this->items, $key, $value);
+            $this->nestedSet($this->items, $key, $value);
         }
+    }
+
+    /**
+     * Set an array item to a given value using "dot" notation.
+     *
+     * If no key is given to the method, the entire array will be replaced.
+     *
+     * @param  array  $array
+     * @param  string|null  $key
+     * @param  mixed  $value
+     * @return array
+     */
+    private function nestedSet(&$array, $key, $value)
+    {
+        if (is_null($key)) {
+            return $array = $value;
+        }
+
+        $keys = explode('.', $key);
+
+        foreach ($keys as $i => $key) {
+            if (count($keys) === 1) {
+                break;
+            }
+
+            unset($keys[$i]);
+
+            // If the key doesn't exist at this depth, we will just create an empty array
+            // to hold the next value, allowing us to create the arrays to hold final
+            // values at the correct depth. Then we'll keep digging into the array.
+            if (! isset($array[$key]) || ! is_object($array[$key])) {
+                $array[$key] = [];
+            }
+
+            $array = &$array[$key];
+        }
+
+        $array[array_shift($keys)] = $value;
+
+        return $array;
     }
 
     /**
@@ -188,5 +228,32 @@ class LaminasRepository implements ArrayAccess, ConfigContract
     public function offsetUnset($key)
     {
         $this->set($key, null);
+    }
+
+        /**
+     * Magic function so that $obj->value will work.
+     *
+     * @param  string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->items->__get($name);
+    }
+
+    /**
+     * Set a value in the config.
+     *
+     * Only allow setting of a property if $allowModifications  was set to true
+     * on construction. Otherwise, throw an exception.
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return void
+     * @throws Exception\RuntimeException
+     */
+    public function __set($name, $value)
+    {
+        return $this->items->__set($name, $value);
     }
 }
