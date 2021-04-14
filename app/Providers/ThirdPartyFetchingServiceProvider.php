@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\ThirdPartyFetchingService;
-use App\Services\TogglService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 
 class ThirdPartyFetchingServiceProvider extends ServiceProvider implements DeferrableProvider

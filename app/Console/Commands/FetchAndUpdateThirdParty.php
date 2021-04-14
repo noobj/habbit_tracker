@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminated\Console\Loggable;
-use App\Contracts\ThirdPartyFetchingService;
+use App\Managers\ThirdPartyServiceManager;
 
 class FetchAndUpdateThirdParty extends Command
 {
@@ -26,19 +26,14 @@ class FetchAndUpdateThirdParty extends Command
      */
     protected $description = 'Fetch from third party And update database';
 
-    protected $thirdPartyService;
-
     /**
      * Create a new command instance.
      *
-     * @param ThirdPartyFetchingService $thirdPartyService
      * @return void
      */
-    public function __construct(ThirdPartyFetchingService $thirdPartyService)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->thirdPartyService = $thirdPartyService;
     }
 
     /**
@@ -47,15 +42,15 @@ class FetchAndUpdateThirdParty extends Command
      * @return int
      * @throws Exception
      */
-    public function handle()
+    public function handle(ThirdPartyServiceManager $manager)
     {
         $daySince = $this->argument('days');
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
-            $summary = $this->thirdPartyService->fetchDailySummaryFromThirdParty($date);
+            $summary = $manager->fetchDailySummaryFromThirdParty($date);
             if ($summary == null) continue;
 
-            $updateInfo = $this->thirdPartyService->updateDailySummary($summary, $date);
+            $updateInfo = $manager->updateDailySummary($summary, $date);
             $this->logInfo("====================$date====================");
             $this->logInfo($updateInfo);
             $this->logInfo("==================================================");
