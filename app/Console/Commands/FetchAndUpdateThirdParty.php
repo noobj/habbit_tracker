@@ -7,6 +7,9 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminated\Console\Loggable;
 use App\Managers\ThirdPartyServiceManager;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Illuminated\Console\Loggable\FileChannel\MonologFormatter;
 
 class FetchAndUpdateThirdParty extends Command
 {
@@ -45,6 +48,16 @@ class FetchAndUpdateThirdParty extends Command
     public function handle(ThirdPartyServiceManager $manager)
     {
         $daySince = $this->argument('days');
+        $this->icLogger()->popHandler();
+        $this->icLogger->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor());
+        $config = $this->laravel['config']["logging.channels.single"];
+        $handler = new StreamHandler(
+            $config['path'], Logger::INFO,
+            $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
+        );
+        $handler->setFormatter(new MonologFormatter);
+        $this->icLogger->pushHandler($handler);
+
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
             $summary = $manager->fetchDailySummaryFromThirdParty($date);
