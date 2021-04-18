@@ -10,10 +10,29 @@ use App\Managers\ThirdPartyServiceManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Illuminated\Console\Loggable\FileChannel\MonologFormatter;
+use Monolog\Formatter\JsonFormatter;
 
 class FetchAndUpdateThirdParty extends Command
 {
     use Loggable;
+
+    /**
+     * Override the default get handler method in Loggable/FileChannel
+     *
+     * @return \Monolog\Handler\RotatingFileHandler
+     */
+    protected function getFileChannelHandler()
+    {
+        $config = $this->laravel['config']["logging.channels.single"];
+        $handler = new StreamHandler(
+            'php://stderr', Logger::INFO,
+            $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
+        );
+
+        $handler->setFormatter(new MonologFormatter);
+
+        return $handler;
+    }
 
     /**
      * The name and signature of the console command.
@@ -47,17 +66,15 @@ class FetchAndUpdateThirdParty extends Command
      */
     public function handle(ThirdPartyServiceManager $manager)
     {
-        $daySince = $this->argument('days');
-        $this->icLogger()->popHandler();
-        $this->icLogger->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor());
         $config = $this->laravel['config']["logging.channels.single"];
         $handler = new StreamHandler(
-            $config['path'], Logger::INFO,
+            'php://stderr', Logger::INFO,
             $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
         );
-        $handler->setFormatter(new MonologFormatter);
+        $handler->setFormatter(new JsonFormatter);
         $this->icLogger->pushHandler($handler);
 
+        $daySince = $this->argument('days');
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
             $summary = $manager->fetchDailySummaryFromThirdParty($date);
