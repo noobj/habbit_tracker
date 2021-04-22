@@ -25,7 +25,7 @@ class SummaryController extends Controller
      * @param string $project
      * @return void
      */
-    public function getProjectSummary(Request $request, string $project = 'Productive')
+    public function getProjectSummary(Request $request, string $project = 'Meditation')
     {
         $validator = Validator::make($request->all(), [
             'start_date' => 'required|date',
