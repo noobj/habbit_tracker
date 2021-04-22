@@ -66,14 +66,6 @@ class FetchAndUpdateThirdParty extends Command
      */
     public function handle(ThirdPartyServiceManager $manager)
     {
-        $config = $this->laravel['config']["logging.channels.single"];
-        $handler = new StreamHandler(
-            'php://stderr', Logger::INFO,
-            $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
-        );
-        $handler->setFormatter(new JsonFormatter);
-        $this->icLogger->pushHandler($handler);
-
         $daySince = $this->argument('days');
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
