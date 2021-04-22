@@ -27,6 +27,11 @@ $app = new Illuminate\Foundation\Application(
 */
 
 $app->singleton(
+    Illuminate\Foundation\Bootstrap\LoadConfiguration::class,
+    App\Bootstrap\LoadConfiguration::class
+);
+
+$app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
 );
