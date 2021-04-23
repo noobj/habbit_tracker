@@ -10,7 +10,6 @@ use App\Managers\ThirdPartyServiceManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Illuminated\Console\Loggable\FileChannel\MonologFormatter;
-use Monolog\Formatter\JsonFormatter;
 
 class FetchAndUpdateThirdParty extends Command
 {

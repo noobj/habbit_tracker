@@ -39,7 +39,7 @@ class SummaryController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-        $rawSummaryData = $this->summaryService->getRangeSummary($project, $startDate, $endDate);
+        $rawSummaryData = $this->summaryService->getRangeDailySummary($project, $startDate, $endDate);
         return $this->summaryService->processTheRawSummaries($rawSummaryData);
     }
 }
