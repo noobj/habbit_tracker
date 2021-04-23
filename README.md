@@ -19,20 +19,21 @@
 * vendor/bin/sail php artisan db:seed ProjectTableSeeder
 * vendor/bin/sail php artisan schedule:FetchAndUpdateThirdParty 10
 * vendor/bin/sail php artisan db:seed DatabaseSeeder
-* Get your random generated user email from database, password would be `password`
-* Get user_token via GET http://127.0.0.1/api/create_token with Basic Auth your email and password
+* Get user_token via GET http://127.0.0.1/api/create_token with 'jjj' and 'password'
 * Use token for fetching Daily Summary GET http://127.0.0.1/api/summary?start_date=2021-01-01&end_date=2021-04-19
+
+* (If you are using vm or access from the other domain, please put your domain name into SANCTUM_STATEFUL_DOMAINS in the .env, or you won't able to pass the authentication)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-> If you want to stick with a habit for good, one simple and effective thing you can do is keep a habit tracker. (James Clear, "Atomic Habits") 
+> If you want to stick with a habit for good, one simple and effective thing you can do is keep a habit tracker. (James Clear, "Atomic Habits")
 
 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbrH0LSIMcdftnQJVqPvQMDbuQGcqHmO-FeA&usqp=CAU">
 
 
 * Fetch the record from Toggl and insert into DB.
-* A github-like activity board to diplay daily summary.  
+* A github-like activity board to diplay daily summary.
 
 
 <img src="https://raw.githubusercontent.com/carlosbaraza/unicorn-contributor/master/docs/imgs/normal-mode.png">

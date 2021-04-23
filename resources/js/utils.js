@@ -22,7 +22,7 @@ const getDates = () => {
       end: endDate
     })
     .sort((d1, d2) => d1 < d2 ? -1 : d1 > d2 ? 1 : 0)
-  
+
   // 剔除 dates 最前面非週日的日期
   dates = dates.slice(dates.indexOf(dates.find(d => isSunday(d))))
   // 只保留 53 週
@@ -51,11 +51,18 @@ const getSummaries = async () => {
   params.set('end_date', format(endDate, 'yyyy-MM-dd'))
   return await fetch(`/api/summary?${params.toString()}`, {
       method: 'GET',
+      credentials: 'same-origin',
       headers: {
-        Authorization: `Bearer ${process.env.MIX_API_KEY}`
-      }
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
     })
-    .then(function(response) {
+    .then(async function(response) {
+      console.log(response);
+      if (response.status == 401) {
+        window.location.href = 'api/create_token';
+      }
+
       return response.json();
     })
 }
