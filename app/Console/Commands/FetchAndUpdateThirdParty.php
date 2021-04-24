@@ -6,11 +6,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminated\Console\Loggable;
-use App\Managers\ThirdPartyServiceManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Illuminated\Console\Loggable\FileChannel\MonologFormatter;
-use Monolog\Formatter\JsonFormatter;
 
 class FetchAndUpdateThirdParty extends Command
 {
@@ -64,8 +62,9 @@ class FetchAndUpdateThirdParty extends Command
      * @return int
      * @throws Exception
      */
-    public function handle(ThirdPartyServiceManager $manager)
+    public function handle()
     {
+        $manager = $this->laravel['third_party_service'];
         $daySince = $this->argument('days');
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
