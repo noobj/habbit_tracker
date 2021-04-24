@@ -37,7 +37,7 @@ class FetchAndUpdateThirdParty extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:FetchAndUpdateThirdParty {days=1 : Day interval to fetch from third party (including Today), default is today}';
+    protected $signature = 'schedule:FetchAndUpdateThirdParty {days=1 : Day interval to fetch from third party (including Today), default is today} {project? : projectname}';
 
     /**
      * The console command description.
@@ -66,9 +66,11 @@ class FetchAndUpdateThirdParty extends Command
     {
         $manager = $this->laravel['third_party_service'];
         $daySince = $this->argument('days');
+        $project = $this->argument('project') ?? '';
+
         for ($i = 0; $i < $daySince ; $i++) {
             $date = Carbon::today()->sub($i, 'day')->toDateString();
-            $summary = $manager->fetchDailySummaryFromThirdParty($date);
+            $summary = $manager->fetchDailySummaryFromThirdParty($date, $project);
             if ($summary == null) continue;
 
             $updateInfo = $manager->updateDailySummary($summary, $date);
