@@ -33,6 +33,15 @@ class FetchAndUpdateThirdParty extends Command
     }
 
     /**
+     * Disable logging useless header info
+     *
+     * @return void
+     */
+    private function logIterationHeaderInformation()
+    {
+    }
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -66,17 +75,20 @@ class FetchAndUpdateThirdParty extends Command
     {
         $manager = $this->laravel['third_party_service'];
         $daySince = $this->argument('days');
-        $project = $this->argument('project') ?? '';
+        $project = $this->argument('project') ?? 'meditation';
 
-        for ($i = 0; $i < $daySince ; $i++) {
-            $date = Carbon::today()->sub($i, 'day')->toDateString();
-            $summary = $manager->fetchDailySummaryFromThirdParty($date, $project);
-            if ($summary == null) continue;
+        $startDate = Carbon::today()->sub($daySince, 'day')->toDateString();
+        $endDate = Carbon::tomorrow()->toDateString(); // include today
+        $summaries = $manager->fetch($startDate, $endDate, $project);
 
-            $updateInfo = $manager->updateDailySummary($summary, $date);
-            $this->logInfo("====================$date====================");
-            $this->logInfo($updateInfo);
-            $this->logInfo("==================================================");
+        if ($summaries == null) {
+            $this->logInfo("No data in this period");
+            exit;
         }
+
+        $updateInfo = $manager->save($summaries);
+        $this->logInfo("=============$startDate ~  $endDate=============");
+        $this->logInfo($updateInfo);
+        $this->logInfo("==================================================");
     }
 }

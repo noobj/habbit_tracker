@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Models\DailySummaries;
 use Exception;
@@ -10,6 +8,10 @@ use Noobj\Toggl\ReportsClient;
 use Noobj\Toggl\TogglClient;
 use App\Contracts\ThirdPartyFetchingService;
 use App\Services\SummaryService;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class TogglService implements ThirdPartyFetchingService
 {
@@ -20,7 +22,7 @@ class TogglService implements ThirdPartyFetchingService
      * @return mixed
      * @throws Exception
      */
-    public function fetchDailySummaryFromThirdParty(string $date, string $projectName = '') : array
+    public function fetch(string $startDate, string $endDate, string $projectName = 'meditation') : array
     {
         $togglToken = env('TOGGL_TOKEN');
 
@@ -41,40 +43,80 @@ class TogglService implements ThirdPartyFetchingService
             'debug'      => false,
         ]);
 
-        // Summary of single day.
-        $response = $toggl_reports->summary([
-            "user_agent"   => $userAgent,
-            "workspace_id" => $wid,
-            "project_ids" => $projectId,
-            "since" => $date,
-            "until" => $date
-        ]);
+        $page = 1;
+        $details = [];
 
-        return $response['data'];
+        do {
+            $response = $toggl_reports->details([
+                "user_agent"   => $userAgent,
+                "workspace_id" => $wid,
+                "project_ids" => $projectId,
+                "since" => $startDate,
+                "until" => $endDate,
+                "page" => $page++
+            ]);
+
+            $details = array_merge($details, $response['data']);
+        } while(sizeof($details) != $response['total_count']);
+
+        $result['items'] = $this->sumUpSummaryDaily($details);
+        $result['projectId'] = $projectId;
+
+        return $result;
+    }
+
+    /**
+     * Sum up the duration of each day
+     *
+     * @param array $details
+     * @return array
+     */
+    private function sumUpSummaryDaily(array $details): Collection
+    {
+        return collect($details)->groupBy(function ($detail) {
+            return $this->fetchDateString($detail['start']);
+        })->map(function($entries) {
+            return $entries->sum('dur');
+        });
+    }
+
+    /**
+     * Extract the date string
+     *
+     * @param string $dateString
+     * @return string
+     */
+    private function fetchDateString(string $dateString): string
+    {
+        return Carbon::create($dateString)->toDateString();
     }
 
     /**
      * @param array $summary
      * @param string $date
      */
-    public function updateDailySummary(array $summary, string $date)
+    public function save(array $summaries)
     {
-        $returnStr = 'Projects [';
-        foreach ($summary as $key => $entry) {
-            $prjId = $entry['id'];
-            $duration = $entry['time'];
-            $dataSet = [
-                'project_id' => $prjId,
-                'date' => $date,
-                'duration' => $duration
-            ];
+        $count = 0;
+        $prjId = $summaries['projectId'];
+        try {
+            DB::beginTransaction();
+            $summaries['items']->map(function ($entry, $key) use ($prjId, &$count) {
+                var_dump($entry);
+                $dataSet = [
+                    'project_id' => $prjId,
+                    'date' => $key,
+                    'duration' => $entry
+                ];
 
-            DailySummaries::updateOrCreate(['project_id' => $prjId, 'date' => $date], $dataSet);
-            $returnStr .= ' ' . $entry['title']['project'];
+                DailySummaries::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
+            });
+
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return "Update failed $e->getMessage()";
         }
-
-        $returnStr .= ' ] has been updated.';
-
-        return $returnStr;
+        return "$count days have been updated;";
     }
 }

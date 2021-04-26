@@ -1,12 +1,12 @@
 <?php
 
-
 namespace App\Contracts;
 
+use Illuminate\Support\Collection;
 
 interface ThirdPartyFetchingService
 {
-    public function fetchDailySummaryFromThirdParty(string $date) : array;
+    public function fetch(string $startDate, string $endDate);
 
-    public function updateDailySummary(array $summary, string $date);
+    public function save(array $summaries);
 }
