@@ -54,6 +54,13 @@ RUN if [ ${XDEBUG} ] ; then \
     && echo "xdebug.client_port = 9003" >> /etc/php/8.0/cli/php.ini ;\
 fi;
 
+RUN apt-get update \
+    && apt-get install -y cron vim \
+    && touch /etc/cron.d/habit \
+    && echo '* * * * * php /var/www/html/artisan schedule:run >> /dev/null 2>&1' > /etc/cron.d/habit \
+    && chmod 0644 /etc/cron.d/habit \
+    && crontab /etc/cron.d/habit
+
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && curl -sL https://deb.nodesource.com/setup_15.x | bash - \
     && apt-get install -y nodejs \
