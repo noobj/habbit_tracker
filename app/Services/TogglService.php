@@ -102,13 +102,13 @@ class TogglService implements ThirdPartyFetchingService
         try {
             DB::beginTransaction();
             $summaries['items']->map(function ($entry, $key) use ($prjId, &$count) {
-                var_dump($entry);
                 $dataSet = [
                     'project_id' => $prjId,
                     'date' => $key,
                     'duration' => $entry
                 ];
 
+                $count++;
                 DailySummaries::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
             });
 

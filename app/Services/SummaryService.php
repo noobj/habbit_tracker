@@ -54,7 +54,7 @@ class SummaryService
      * @param string $endDate
      * @return array
      */
-    public function getRangeSummary(string $project, string $startDate, string $endDate): array
+    public function getRangeDailySummary(string $project, string $startDate, string $endDate): array
     {
         $projectId = static::getProjectIdByName($project);
 
@@ -70,7 +70,7 @@ class SummaryService
      * @param integer $minuteRaw
      * @return string
      */
-    private function convertToHoursMins(int $minuteRaw): string
+    private function convertToHoursMins(int $minuteRaw, $format = '%dh%dm'): string
     {
         if ($minuteRaw < 1) {
             return '1m';
@@ -81,7 +81,19 @@ class SummaryService
 
         if ($hours == 0) return sprintf('%dm', $minutes);
 
-        return sprintf('%dh%dm', $hours, $minutes);
+        return sprintf($format, $hours, $minutes);
+    }
+
+    /**
+     * Format milliseconds type
+     *
+     * @param string $rawDuration
+     * @return void
+     */
+    public function convertRawDurationToFormat($rawDuration, $format = '%dh%dm') {
+        $durationInMinute = $rawDuration / 1000 / 60;
+
+        return $this->convertToHoursMins($durationInMinute, $format);
     }
 
     /**
@@ -93,12 +105,12 @@ class SummaryService
     public function processTheRawSummaries(array $rawData): array
     {
         $result = array_map(function($entry) {
-            $durationInMinute = $entry['duration'] / 1000 / 60;
-
-            $levelIndex = $durationInMinute / 30;
+            // Turn milliseconds duration into multiplier of 30 mins
+            $levelIndex = $entry['duration'] / 1000 / 60 / 30;
             $level = $levelIndex > 5 ? 4 : $this->durationLevelMap[$levelIndex];
+
             $entry['level'] = $level;
-            $entry['duration'] = $this->convertToHoursMins($durationInMinute);
+            $entry['duration'] = $this->convertRawDurationToFormat($entry['duration']);
 
             $entry['date'] = Carbon::createFromDate($entry['date'])->toFormattedDateString();
             $entry['timestamp'] = intval(Carbon::createFromDate($entry['date'])->getPreciseTimestamp(3));
@@ -107,5 +119,38 @@ class SummaryService
         }, $rawData);
 
         return $result;
+    }
+
+    /**
+     * Get the daily summary between given date range
+     *
+     * @param string $project
+     * @param string $startDate
+     * @param string $endDate
+     * @return integer
+     */
+    public function getRangeSummary(string $project, string $startDate, string $endDate): int
+    {
+        $projectId = $this->getProjectIdByName($project);
+
+        return DailySummaries::whereBetween('date', [$startDate, $endDate])
+            ->where('project_id', $projectId)
+            ->sum('duration');
+    }
+
+    public function getPercentageStringOfGoal(int $milliseconds): string
+    {
+        if ($milliseconds == 0) {
+            return "Start meditating bro";
+        }
+
+        $goalInMilliSec = env('GOAL_HOUR') * 60 * 60 * 1000;
+        $percent = round($milliseconds / $goalInMilliSec * 100, 2);
+        if ($percent > 100) {
+            $percent -= 100;
+            return "👍You've achieved *$percent%* more than goal👍";
+        } else {
+            return "You already done $percent%, KEEP GOING 💪";
+        }
     }
 }
