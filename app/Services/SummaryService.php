@@ -134,4 +134,20 @@ class SummaryService
             ->where('project_id', $projectId)
             ->sum('duration');
     }
+
+    public function getPercentageStringOfGoal(int $milliseconds): string
+    {
+        if ($milliseconds == 0) {
+            return "Start meditating bro";
+        }
+
+        $goalInMilliSec = env('GOAL_HOUR') * 60 * 60 * 1000;
+        $percent = round($milliseconds / $goalInMilliSec * 100, 2);
+        if ($percent > 100) {
+            $percent -= 100;
+            return "👍You've achieved *$percent%* more than goal👍";
+        } else {
+            return "You already done $percent%, KEEP GOING 💪";
+        }
+    }
 }

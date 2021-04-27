@@ -24,8 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('schedule:FetchAndUpdateThirdParty 3')
-                 ->daily();
+        $schedule->command('schedule:NotifyDailyProgress')
+                 ->twiceDaily(22, 23)->before(function() {
+                     $this->call('schedule:FetchAndUpdateThirdParty 2');
+                 });
     }
 
     /**

@@ -45,10 +45,11 @@ class NotifyDailyProgress extends Command
         $project = 'meditation';
 
         $summary = $summaryService->getRangeSummary($project, $monday, $today);
+        $percenString = $summaryService->getPercentageStringOfGoal($summary);
         $total = $summaryService->convertRawDurationToFormat($summary);
 
         $todayDateString = $today->toDateString();
-        $message = "[[$todayDateString]] You have 🧘 for *$total* so far this week! KEEP GOING!";
+        $message = "[[$todayDateString]] $percenString \n You have 🧘 *$total* so far this week!";
         $telegramService->send($message);
     }
 }
