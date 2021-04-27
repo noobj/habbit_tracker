@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminated\Console\Loggable;
-use App\Managers\ThirdPartyServiceManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Illuminated\Console\Loggable\FileChannel\MonologFormatter;
@@ -34,11 +33,20 @@ class FetchAndUpdateThirdParty extends Command
     }
 
     /**
+     * Disable logging useless header info
+     *
+     * @return void
+     */
+    private function logIterationHeaderInformation()
+    {
+    }
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'schedule:FetchAndUpdateThirdParty {days=1 : Day interval to fetch from third party (including Today), default is today}';
+    protected $signature = 'schedule:FetchAndUpdateThirdParty {days=1 : Day interval to fetch from third party (including Today), default is today} {project? : projectname}';
 
     /**
      * The console command description.
@@ -63,18 +71,24 @@ class FetchAndUpdateThirdParty extends Command
      * @return int
      * @throws Exception
      */
-    public function handle(ThirdPartyServiceManager $manager)
+    public function handle()
     {
+        $manager = $this->laravel['third_party_service'];
         $daySince = $this->argument('days');
-        for ($i = 0; $i < $daySince ; $i++) {
-            $date = Carbon::today()->sub($i, 'day')->toDateString();
-            $summary = $manager->fetchDailySummaryFromThirdParty($date);
-            if ($summary == null) continue;
+        $project = $this->argument('project') ?? 'meditation';
 
-            $updateInfo = $manager->updateDailySummary($summary, $date);
-            $this->logInfo("====================$date====================");
-            $this->logInfo($updateInfo);
-            $this->logInfo("==================================================");
+        $startDate = Carbon::today()->sub($daySince, 'day')->toDateString();
+        $endDate = Carbon::tomorrow()->toDateString(); // include today
+        $summaries = $manager->fetch($startDate, $endDate, $project);
+
+        if ($summaries == null) {
+            $this->logInfo("No data in this period");
+            exit;
         }
+
+        $updateInfo = $manager->save($summaries);
+        $this->logInfo("=============$startDate ~  $endDate=============");
+        $this->logInfo($updateInfo);
+        $this->logInfo("==================================================");
     }
 }

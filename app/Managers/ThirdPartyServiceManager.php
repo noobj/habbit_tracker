@@ -16,9 +16,4 @@ class ThirdPartyServiceManager extends Manager {
     {
         return $this->config->services->time_record;
     }
-
-    public function createTogglDriver(): TogglService
-    {
-        return new TogglService();
-    }
 }

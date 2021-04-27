@@ -5,8 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\ThirdPartyFetchingService;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use App\Managers\ThirdPartyServiceManager;
+use App\Services\TogglService;
 
-class ThirdPartyFetchingServiceProvider extends ServiceProvider implements DeferrableProvider
+class ThirdPartyFetchingServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -15,10 +17,8 @@ class ThirdPartyFetchingServiceProvider extends ServiceProvider implements Defer
      */
     public function register()
     {
-        $this->app->singleton(ThirdPartyFetchingService::class, function ($app) {
-            $config = $app->make('config')->all();
-            $serviceName = 'App\\Services\\' . ucfirst(strtolower($config->services->time_record)) . 'Service';
-            return new $serviceName();
+        $this->app->singleton('third_party_service', function ($app) {
+            return new ThirdPartyServiceManager($app);
         });
     }
 
@@ -29,16 +29,9 @@ class ThirdPartyFetchingServiceProvider extends ServiceProvider implements Defer
      */
     public function boot()
     {
-        //
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [ThirdPartyFetchingService::class];
+        $manager = $this->app['third_party_service'];
+        $manager->extend('toggl', function ($app) {
+            return new TogglService();
+        });
     }
 }

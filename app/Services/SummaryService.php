@@ -36,11 +36,14 @@ class SummaryService
      * @param string $name
      * @return integer
      */
-    private function getProjectIdByName(string $name): int
-    {
+    public static function getProjectIdByName(string $name): ?int {
         $project = Projects::where('name', $name)->first();
 
-        return $project->id;
+        if ($project) {
+            return $project->id;
+        }
+
+        return null;
     }
 
     /**
@@ -53,7 +56,7 @@ class SummaryService
      */
     public function getRangeDailySummary(string $project, string $startDate, string $endDate): array
     {
-        $projectId = $this->getProjectIdByName($project);
+        $projectId = static::getProjectIdByName($project);
 
         return DailySummaries::whereBetween('date', [$startDate, $endDate])
             ->where('project_id', $projectId)
