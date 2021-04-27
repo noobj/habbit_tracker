@@ -87,7 +87,7 @@ class FetchAndUpdateThirdParty extends Command
         }
 
         $updateInfo = $manager->save($summaries);
-        $this->logInfo("=============$startDate ~  $endDate=============");
+        $this->logInfo("=============$startDate ~ $endDate=============");
         $this->logInfo($updateInfo);
         $this->logInfo("==================================================");
     }
