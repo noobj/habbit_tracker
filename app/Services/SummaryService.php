@@ -11,6 +11,9 @@ use Exception;
 
 class SummaryService
 {
+    const MAX_DURATION_LEVEL_INDEX = 5;
+    const MAX_DURATION_LEVEL = 4;
+
     /**
      * Used for mapping the minute range to color level for frontend displaying
      * Rules as:
@@ -105,9 +108,9 @@ class SummaryService
     public function processTheRawSummaries(array $rawData): array
     {
         $result = array_map(function($entry) {
-            // Turn milliseconds duration into multiplier of 30 mins
+            // Divide milliseconds duration into multiplier of 30 mins
             $levelIndex = $entry['duration'] / 1000 / 60 / 30;
-            $level = $levelIndex > 5 ? 4 : $this->durationLevelMap[$levelIndex];
+            $level = $levelIndex > SELF::MAX_DURATION_LEVEL_INDEX ? SELF::MAX_DURATION_LEVEL : $this->durationLevelMap[$levelIndex];
 
             $entry['level'] = $level;
             $entry['duration'] = $this->convertRawDurationToFormat($entry['duration']);

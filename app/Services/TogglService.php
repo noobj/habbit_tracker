@@ -29,12 +29,16 @@ class TogglService implements ThirdPartyFetchingService
         // Get the toggl client with your toggl api key
         $toggl_client = TogglClient::factory(array('api_key' => $togglToken, 'apiVersion' => 'v8'));
 
-        $projectId = SummaryService::getProjectIdByName($projectName);
+        try {
+            $projectId = SummaryService::getProjectIdByName($projectName);
 
-        $workspaces = $toggl_client->getWorkspaces(array());
+            $workspaces = $toggl_client->getWorkspaces(array());
 
-        $wid = $workspaces[0]['id']; // Retrieve this with the get-workspaces.php file and update
-        $userAgent = "Toggl PHP Client";
+            $wid = $workspaces[0]['id']; // Retrieve this with the get-workspaces.php file and update
+            $userAgent = "Toggl PHP Client";
+        } catch (\Throwable $e) {
+            throw $e;
+        }
 
         // Get the toggl client with your toggl api key
         $toggl_reports = ReportsClient::factory([
@@ -46,18 +50,23 @@ class TogglService implements ThirdPartyFetchingService
         $page = 1;
         $details = [];
 
-        do {
-            $response = $toggl_reports->details([
-                "user_agent"   => $userAgent,
-                "workspace_id" => $wid,
-                "project_ids" => $projectId,
-                "since" => $startDate,
-                "until" => $endDate,
-                "page" => $page++
-            ]);
+        try {
+            do {
+                $response = $toggl_reports->details([
+                    "user_agent"   => $userAgent,
+                    "workspace_id" => $wid,
+                    "project_ids" => $projectId,
+                    "since" => $startDate,
+                    "until" => $endDate,
+                    "page" => $page++
+                ]);
 
-            $details = array_merge($details, $response['data']);
-        } while(sizeof($details) != $response['total_count']);
+                $details = array_merge($details, $response['data']);
+            } while(sizeof($details) != $response['total_count']);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
 
         $result['items'] = $this->sumUpSummaryDaily($details);
         $result['projectId'] = $projectId;
