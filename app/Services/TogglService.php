@@ -106,8 +106,9 @@ class TogglService implements ThirdPartyFetchingService
      */
     public function save(array $summaries)
     {
-        $count = 0;
+        $count = sizeof($summaries['items']);
         $prjId = $summaries['projectId'];
+
         try {
             DB::beginTransaction();
             $summaries['items']->map(function ($entry, $key) use ($prjId, &$count) {
@@ -117,15 +118,16 @@ class TogglService implements ThirdPartyFetchingService
                     'duration' => $entry
                 ];
 
-                $count++;
                 DailySummaries::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
             });
 
             DB::commit();
         } catch (QueryException $e) {
             DB::rollBack();
-            return "Update failed $e->getMessage()";
+
+            return "Update failed " . $e->getMessage();
         }
+
         return "$count days have been updated;";
     }
 }

@@ -41,7 +41,8 @@ class SummaryService
      * @param string $name
      * @return integer
      */
-    public static function getProjectIdByName(string $name): ?int {
+    public static function getProjectIdByName(string $name): ?int
+    {
         $project = Projects::where('name', $name)->first();
 
         if (!$project) {

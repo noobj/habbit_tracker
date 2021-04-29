@@ -28,4 +28,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->get('/summary/{project?}', 'SummaryController@getProjectSummary');
+Route::middleware('auth:sanctum')->get('/summaries/{project?}', 'SummaryController@getProjectSummary');
