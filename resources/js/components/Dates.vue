@@ -26,7 +26,10 @@ export default {
   data () {
     return {
       dates: getDates(),
-      summaries: []
+      summaries: [],
+      totalLastYear: '',
+      totalThisMonth: '',
+      longestRecord: ''
     }
   },
   methods: {
@@ -42,7 +45,16 @@ export default {
     }
   },
   async mounted () {
-    this.summaries = await getSummaries()
+    let {
+      summaries,
+      total_last_year,
+      total_this_month,
+      longest_record
+    } = await getSummaries()
+    this.summaries = summaries
+    this.totalLastYear = total_last_year
+    this.totalThisMonth = total_this_month
+    this.longestRecord = `${longest_record.duration} on ${longest_record.date}`
   }
 }
 </script>
