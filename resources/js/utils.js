@@ -49,7 +49,7 @@ const getSummaries = async () => {
   let params = new URLSearchParams
   params.set('start_date', format(startDate, 'yyyy-MM-dd'))
   params.set('end_date', format(endDate, 'yyyy-MM-dd'))
-  return await fetch(`/api/summary?${params.toString()}`, {
+  return await fetch(`/api/summaries?${params.toString()}`, {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
