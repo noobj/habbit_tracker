@@ -42,11 +42,11 @@ class SummaryService
     public static function getProjectIdByName(string $name): ?int {
         $project = Projects::where('name', $name)->first();
 
-        if ($project) {
-            return $project->id;
+        if (!$project) {
+            throw new Exception('Project not found.');
         }
 
-        return null;
+        return $project->id;
     }
 
     /**
