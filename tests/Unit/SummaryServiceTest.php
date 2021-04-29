@@ -25,7 +25,7 @@ class SummaryServiceTest extends TestCase
 
     public function testGetProjectIdByName()
     {
-        $prjId = SummaryService::getProjectIdByName('meditation');
+        $prjId = SummaryService::getProjectIdByName('Meditation');
 
         $this->assertEquals(157099012, $prjId);
     }
@@ -35,13 +35,13 @@ class SummaryServiceTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Project not found.');
 
-        $prjId = SummaryService::getProjectIdByName('medation');
+        $prjId = SummaryService::getProjectIdByName('Medation');
     }
 
     public function testGetRangeDailySummary()
     {
         DailySummary::factory(7)->create();
-        $summaries = (new SummaryService)->getRangeDailySummary('meditation', '2021-04-07', '2021-04-27');
+        $summaries = (new SummaryService)->getRangeDailySummary('Meditation', '2021-04-07', '2021-04-27');
 
         $this->assertEquals(7, sizeof($summaries));
         $this->assertInstanceOf(DailySummary::class, $summaries->first());

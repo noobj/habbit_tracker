@@ -6,6 +6,7 @@ use App\Services\TogglService;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\DailySummary;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 
 class TogglServiceTest extends TestCase
 {
@@ -29,8 +30,24 @@ class TogglServiceTest extends TestCase
      */
     public function testFetch()
     {
+        $mockReportResponse = [
+            [
+            "start" => "2021-04-21T23:00:00+08:00",
+            "end" => "2021-04-21T23:20:00+08:00",
+            "dur" => 1200000,
+            "project" => "Meditation"
+        ], [
+            "start" => "2021-04-20T23:30:18+08:00",
+            "end" => "2021-04-21T23:20:00+08:00",
+            "dur" => 3300000,
+            "project" => "Meditation"
+        ], 'total_count' => 2];
+
         $mock = \Mockery::mock('overload:App\Services\SummaryService');
         $mock->shouldReceive('getProjectIdByName')->once()->andReturn(157099012);
+        $togglReportClientMock = $this->createMock(GuzzleClient::class);
+        $togglReportClientMock->expects($this->once())->method('execute')->willReturn($mockReportResponse);
+
         $result = (new TogglService)->fetch('2021-04-20', '2021-04-22');
 
         $this->assertEquals(4500000, $result['items']->sum());
@@ -62,7 +79,7 @@ class TogglServiceTest extends TestCase
         $mock = \Mockery::mock('overload:App\Services\SummaryService');
         $mock->shouldReceive('getProjectIdByName')->once()->andReturn(157099012);
         $result = (new TogglService)->fetch('2021-04-20', '2021-04-22');
-        $result['items']->transform( fn($entry) => 'aaa' );
+        $result['items']->transform( fn($entry) => null );
 
         $response = (new TogglService)->save($result);
         $this->assertStringContainsString("Update failed", $response);

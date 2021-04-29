@@ -67,7 +67,6 @@ class TogglService implements ThirdPartyFetchingService
             throw $e;
         }
 
-
         $result['items'] = $this->sumUpSummaryDaily($details);
         $result['projectId'] = $projectId;
 
