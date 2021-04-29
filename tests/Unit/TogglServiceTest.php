@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Unit;
 use App\Services\TogglService;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\DailySummaries;
+use App\Models\DailySummary;
 
 class TogglServiceTest extends TestCase
 {
@@ -23,6 +23,10 @@ class TogglServiceTest extends TestCase
 
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testFetch()
     {
         $mock = \Mockery::mock('overload:App\Services\SummaryService');
@@ -33,18 +37,26 @@ class TogglServiceTest extends TestCase
         $this->assertEquals(157099012, $result['projectId']);
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testSave()
     {
         $mock = \Mockery::mock('overload:App\Services\SummaryService');
         $mock->shouldReceive('getProjectIdByName')->once()->andReturn(157099012);
 
-        $result = (new TogglService)->fetch('2021-02-20', '2021-04-22');
+        $result = (new TogglService)->fetch('2021-04-20', '2021-04-22');
         $response = (new TogglService)->save($result);
 
-        $this->assertEquals(DailySummaries::all()->pluck('duration'), $result['items']->flatten());;
+        $this->assertEquals(DailySummary::all()->pluck('duration'), $result['items']->flatten());;
         $this->assertEquals("2 days have been updated;", $response);
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testSaveFailed()
     {
         $mock = \Mockery::mock('overload:App\Services\SummaryService');

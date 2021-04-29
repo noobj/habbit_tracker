@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\DailySummaries;
+use App\Models\DailySummary;
 use Exception;
 use Noobj\Toggl\ReportsClient;
 use Noobj\Toggl\TogglClient;
@@ -118,7 +118,7 @@ class TogglService implements ThirdPartyFetchingService
                     'duration' => $entry
                 ];
 
-                DailySummaries::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
+                DailySummary::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
             });
 
             DB::commit();

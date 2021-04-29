@@ -4,7 +4,7 @@ namespace Illuminate\Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\DailySummaries;
+use App\Models\DailySummary;
 use App\Services\SummaryService;
 
 class SummaryServiceTest extends TestCase
@@ -40,10 +40,10 @@ class SummaryServiceTest extends TestCase
 
     public function testGetRangeDailySummary()
     {
-        DailySummaries::factory(7)->create();
+        DailySummary::factory(7)->create();
         $summaries = (new SummaryService)->getRangeDailySummary('meditation', '2021-04-07', '2021-04-27');
 
         $this->assertEquals(7, sizeof($summaries));
-        $this->assertInstanceOf(DailySummaries::class, $summaries->first());
+        $this->assertInstanceOf(DailySummary::class, $summaries->first());
     }
 }

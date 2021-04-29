@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\DailySummaries;
+use App\Models\DailySummary;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DailySummariesFactory extends Factory
+class DailySummaryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = DailySummaries::class;
+    protected $model = DailySummary::class;
 
     /**
      * Define the model's default state.

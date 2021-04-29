@@ -4,8 +4,8 @@
 namespace App\Services;
 
 
-use App\Models\DailySummaries;
-use App\Models\Projects;
+use App\Models\DailySummary;
+use App\Models\Project;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -43,7 +43,7 @@ class SummaryService
      */
     public static function getProjectIdByName(string $name): ?int
     {
-        $project = Projects::where('name', $name)->first();
+        $project = Project::where('name', $name)->first();
 
         if (!$project) {
             throw new Exception('Project not found.');
@@ -64,7 +64,7 @@ class SummaryService
     {
         $projectId = static::getProjectIdByName($project);
 
-        return DailySummaries::whereBetween('date', [$startDate, $endDate])
+        return DailySummary::whereBetween('date', [$startDate, $endDate])
             ->where('project_id', $projectId)
             ->select('id', 'date', 'duration')
             ->get();
@@ -139,7 +139,7 @@ class SummaryService
     {
         $projectId = $this->getProjectIdByName($project);
 
-        return DailySummaries::whereBetween('date', [$startDate, $endDate])
+        return DailySummary::whereBetween('date', [$startDate, $endDate])
             ->where('project_id', $projectId)
             ->sum('duration');
     }
