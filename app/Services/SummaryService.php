@@ -8,6 +8,8 @@ use App\Models\DailySummaries;
 use App\Models\Projects;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class SummaryService
 {
@@ -55,16 +57,16 @@ class SummaryService
      * @param string $project
      * @param string $startDate
      * @param string $endDate
-     * @return array
+     * @return Collection
      */
-    public function getRangeDailySummary(string $project, string $startDate, string $endDate): array
+    public function getRangeDailySummary(string $project, string $startDate, string $endDate): Collection
     {
         $projectId = static::getProjectIdByName($project);
 
         return DailySummaries::whereBetween('date', [$startDate, $endDate])
             ->where('project_id', $projectId)
             ->select('id', 'date', 'duration')
-            ->get()->toArray();
+            ->get();
     }
 
     /**
@@ -102,12 +104,12 @@ class SummaryService
     /**
      * Process the raw data format fetch from database
      *
-     * @param array $rawData
+     * @param Collection $rawData
      * @return array
      */
-    public function processTheRawSummaries(array $rawData): array
+    public function processTheRawSummaries(Collection $rawData): array
     {
-        $result = array_map(function($entry) {
+        $result = $rawData->map(function($entry) {
             // Divide milliseconds duration into multiplier of 30 mins
             $levelIndex = $entry['duration'] / 1000 / 60 / 30;
             $level = $levelIndex > SELF::MAX_DURATION_LEVEL_INDEX ? SELF::MAX_DURATION_LEVEL : $this->durationLevelMap[$levelIndex];
@@ -119,7 +121,7 @@ class SummaryService
             $entry['timestamp'] = intval(Carbon::createFromDate($entry['date'])->getPreciseTimestamp(3));
 
             return $entry;
-        }, $rawData);
+        })->toArray();
 
         return $result;
     }
@@ -155,5 +157,56 @@ class SummaryService
         } else {
             return "You already done $percent%, KEEP GOING 💪";
         }
+    }
+
+    /**
+     * Get the longest daily record
+     *
+     * @param Collection $rawData
+     * @return array
+     */
+    public function getLongestDayRecord(Collection $rawData)
+    {
+        $tmp = $rawData->map(
+            fn($entry) => $entry->getRawOriginal()
+        )->sortByDesc('duration')->first();
+
+        return collect($tmp)->pipe(
+            function($entry) {
+                $entry['duration'] = $this->convertRawDurationToFormat($entry['duration']);
+                return $entry;
+            }
+        )->only(['date', 'duration']);
+    }
+
+    /**
+     * Get the total duration of this month
+     *
+     * @param Collection $rawData
+     * @return string
+     */
+    public function getTotalbyDateString(Collection $rawData, string $filterString): string
+    {
+        return $rawData->map(
+            fn($entry) => $entry->getRawOriginal()
+        )->filter(
+            fn($entry) => str_contains($entry['date'], $filterString)
+        )
+        ->pipe(
+            function($collection) {
+                return $this->convertRawDurationToFormat($collection->sum('duration'));
+            }
+        );
+    }
+
+    public function getTotalDuration(Collection $rawData): string
+    {
+        return $rawData->map(
+            fn($entry) => $entry->getRawOriginal()
+        )->pipe(
+            function($collection) {
+                return $this->convertRawDurationToFormat($collection->sum('duration'));
+            }
+        );
     }
 }
