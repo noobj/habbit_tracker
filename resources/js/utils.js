@@ -58,7 +58,6 @@ const getSummaries = async () => {
       },
     })
     .then(async function(response) {
-      console.log(response);
       if (response.status == 401) {
         window.location.href = 'api/create_token';
       }
