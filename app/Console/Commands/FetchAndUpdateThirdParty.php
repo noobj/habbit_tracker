@@ -15,6 +15,15 @@ class FetchAndUpdateThirdParty extends Command
     use Loggable;
 
     /**
+     * Initialize error handling.
+     *
+     * @return void
+     */
+    private function initializeErrorHandling()
+    {
+    }
+
+    /**
      * Override the default get handler method in Loggable/FileChannel
      *
      * @return \Monolog\Handler\RotatingFileHandler

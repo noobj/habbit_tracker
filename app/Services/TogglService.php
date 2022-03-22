@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use App\Exceptions\UpdateSummaryException;
 
 class TogglService implements ThirdPartyFetchingService
 {
@@ -114,7 +115,7 @@ class TogglService implements ThirdPartyFetchingService
                 $dataSet = [
                     'project_id' => $prjId,
                     'date' => $key,
-                    'duration' => $entry
+                    'duration' => "fff"
                 ];
 
                 DailySummary::updateOrCreate(['project_id' => $prjId, 'date' => $key], $dataSet);
@@ -123,8 +124,7 @@ class TogglService implements ThirdPartyFetchingService
             DB::commit();
         } catch (QueryException $e) {
             DB::rollBack();
-
-            return "Update failed " . $e->getMessage();
+            throw new UpdateSummaryException($e);
         }
 
         return "$count days have been updated;";
