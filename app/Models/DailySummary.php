@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DailySummaries extends Model
+class DailySummary extends Model
 {
     use HasFactory;
 
@@ -19,6 +19,6 @@ class DailySummaries extends Model
 
     public function project()
     {
-        return $this->belongsTo('App\Models\Projects','project_id');
+        return $this->belongsTo('App\Models\Project','project_id');
     }
 }

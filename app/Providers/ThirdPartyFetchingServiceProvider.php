@@ -3,8 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Contracts\ThirdPartyFetchingService;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use App\Managers\ThirdPartyServiceManager;
 use App\Services\TogglService;
 

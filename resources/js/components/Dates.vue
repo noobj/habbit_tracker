@@ -1,6 +1,29 @@
 <template>
-  <div id="app" class="flex justify-center items-center">
-    <div class="flex-auto grid grid-flow-col grid-rows-7 grid-cols-53 gap-x-1/500 gap-y-1/50 mx-8 pt-6 px-10">
+  <div id="app" class="flex flex-col justify-center items-center">
+    <div class="grid grid-cols-3 w-11/12 text-center">
+      <div
+        v-if="totalLastYear !== ''"
+        class="m-2 border border-gray-200 rounded-lg"
+      >
+        <div class="py-2 border-b border-gray-200">Last Year</div>
+        <div class="py-2 text-2xl text-yellow-600 font-bold">{{totalLastYear}}</div>
+      </div>
+      <div
+        v-if="totalThisMonth !== ''"
+        class="m-2 border border-gray-200 rounded-lg"
+      >
+        <div class="py-2 border-b border-gray-200">This Month</div>
+        <div class="py-2 text-2xl text-yellow-600 font-bold">{{totalThisMonth}}</div>
+      </div>
+      <div
+        v-if="longestRecord !== ''"
+        class="m-2 border border-gray-200 rounded-lg"
+      >
+        <div class="py-2 border-b border-gray-200">The Longest Record</div>
+        <div class="py-2 text-2xl text-yellow-600 font-bold">{{longestRecord}}</div>
+      </div>
+    </div>
+    <div class="flex-grow-0 grid grid-flow-col grid-rows-7 grid-cols-53 gap-1 w-11/12 pt-6 px-10">
       <Date
         v-for="(date, index) in dates"
         :key="date.getTime()"
@@ -26,7 +49,10 @@ export default {
   data () {
     return {
       dates: getDates(),
-      summaries: []
+      summaries: [],
+      totalLastYear: '',
+      totalThisMonth: '',
+      longestRecord: ''
     }
   },
   methods: {
@@ -42,7 +68,16 @@ export default {
     }
   },
   async mounted () {
-    this.summaries = await getSummaries()
+    let {
+      summaries,
+      total_last_year,
+      total_this_month,
+      longest_record
+    } = await getSummaries()
+    this.summaries = summaries
+    this.totalLastYear = total_last_year
+    this.totalThisMonth = total_this_month
+    this.longestRecord = `${longest_record.duration} on ${longest_record.date}`
   }
 }
 </script>
@@ -53,11 +88,5 @@ export default {
 }
 .grid-cols-53 {
   grid-template-columns: repeat(53, minmax(0, 1fr));
-}
-.gap-x-1\/500 {
-  column-gap: 0.5%;
-}
-.gap-y-1\/50 {
-  row-gap: 5%;
 }
 </style>

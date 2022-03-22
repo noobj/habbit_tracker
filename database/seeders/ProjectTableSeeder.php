@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ProjectTableSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class ProjectTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('projects')->insert([
+        DB::table('projects')->insert([
             ['id' => 92848653, 'name' => 'Productive'],
             ['id' => 154629151, 'name' => 'Workout'],
             ['id' => 157099012, 'name' => 'Meditation'],

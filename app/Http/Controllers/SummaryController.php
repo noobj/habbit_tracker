@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\SummaryService;
+use Carbon\Carbon;
 
 class SummaryController extends Controller
 {
@@ -40,6 +41,13 @@ class SummaryController extends Controller
         $endDate = $request->get('end_date');
 
         $rawSummaryData = $this->summaryService->getRangeDailySummary($project, $startDate, $endDate);
-        return $this->summaryService->processTheRawSummaries($rawSummaryData);
+
+        $response['summaries'] = $this->summaryService->processTheRawSummaries($rawSummaryData);
+        $response['longest_record'] = $this->summaryService->getLongestDayRecord($rawSummaryData);
+        $stringOfThisMonth = Carbon::today()->format('Y-m');
+        $response['total_this_month'] = $this->summaryService->getTotalbyDateString($rawSummaryData, $stringOfThisMonth);
+        $response['total_last_year'] = $this->summaryService->getTotalDuration($rawSummaryData);
+
+        return $response;
     }
 }
